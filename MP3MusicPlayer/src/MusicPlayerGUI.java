@@ -171,6 +171,28 @@ public class MusicPlayerGUI extends JFrame {
         JMenu playlistMenu = new JMenu("Playlist");
         menuBar.add(playlistMenu);
 
+        JMenuItem deletePlaylist = new JMenuItem("Delete Playlist");
+        deletePlaylist.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setFileFilter(new FileNameExtensionFilter("Playlist", "txt"));
+                jFileChooser.setCurrentDirectory(new File("src/assets"));
+
+                int result = jFileChooser.showOpenDialog(MusicPlayerGUI.this);
+                File selectedFile = jFileChooser.getSelectedFile();
+
+                if(result == JFileChooser.APPROVE_OPTION && selectedFile != null){
+                    // stop the music
+                    musicPlayer.stopSong();
+
+                    // load playlist
+                    musicPlayer.deletePlaylist(selectedFile);
+                }
+            }
+        });
+        playlistMenu.add(deletePlaylist);
+
         // then add the items to the playlist menu
         JMenuItem createPlaylist = new JMenuItem("Create Playlist");
         createPlaylist.addActionListener(new ActionListener() {
@@ -206,6 +228,8 @@ public class MusicPlayerGUI extends JFrame {
 
         add(toolBar);
     }
+
+
 
     private void addPlaybackBtns(){
         playbackBtns = new JPanel();
@@ -272,6 +296,21 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.add(nextButton);
 
         add(playbackBtns);
+
+        JButton delsong = new JButton(loadImage("src/assets/diz.png"));
+        delsong.setBorderPainted(false);
+        delsong.setBackground(null);
+        delsong.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // toggle off play button and toggle on pause button
+                enablePauseButtonDisablePlayButton();
+
+                // play or resume song
+                musicPlayer.delsong();
+            }
+        });
+        playbackBtns.add(delsong);
     }
 
     // this will be used to update our slider from the music player class
@@ -350,5 +389,20 @@ public class MusicPlayerGUI extends JFrame {
         // could not find resource
         return null;
     }
+
+    public int getPlaybackSliderValue() {
+        return playbackSlider.getValue();
+    }
+
+    public boolean isPlayButtonEnabled() {
+        JButton playButton = (JButton) playbackBtns.getComponent(1);
+        return playButton.isEnabled() && playButton.isVisible();
+    }
+
+    public boolean isPauseButtonEnabled() {
+        JButton pauseButton = (JButton) playbackBtns.getComponent(2);
+        return pauseButton.isEnabled() && pauseButton.isVisible();
+    }
 }
+
 

@@ -34,6 +34,8 @@ public class MusicPlayer extends PlaybackListener {
 
     private boolean pressedNext, pressedPrev;
 
+    private boolean pressedDel;
+
     // stores in teh last frame when the playback is finished (used for pausing and resuming)
     private int currentFrame;
     public void setCurrentFrame(int frame){
@@ -42,6 +44,7 @@ public class MusicPlayer extends PlaybackListener {
 
     // track how many milliseconds has passed since playing the song (used for updating the slider)
     private int currentTimeInMilli;
+
     public void setCurrentTimeInMilli(int timeInMilli){
         currentTimeInMilli = timeInMilli;
     }
@@ -72,6 +75,10 @@ public class MusicPlayer extends PlaybackListener {
 
             playCurrentSong();
         }
+    }
+
+    public void deletePlaylist(File playlistFile) {
+        playlistFile.delete();
     }
 
     public void loadPlaylist(File playlistFile){
@@ -123,6 +130,41 @@ public class MusicPlayer extends PlaybackListener {
 
             // then we want to stop the player
             stopSong();
+        }
+    }
+
+    public void delsong() {
+        if (advancedPlayer != null && currentPlaylistIndex < playlist.size()) {
+            boolean wasPlaying = !songFinished; //
+
+            if (wasPlaying) {
+                stopSong();
+            }
+
+            playlist.remove(currentPlaylistIndex);
+
+            if (currentPlaylistIndex >= playlist.size()) {
+                currentPlaylistIndex = playlist.size() - 1;
+            }
+
+            if (playlist.isEmpty()) {
+                currentSong = null;
+                // Обработка пустого плейлиста
+            } else {
+                currentSong = playlist.get(currentPlaylistIndex);
+                if (wasPlaying) {
+                    playCurrentSong();
+                }
+                currentFrame = 0;
+
+                // reset current time in milli
+                currentTimeInMilli = 0;
+
+                // update gui
+                musicPlayerGUI.enablePauseButtonDisablePlayButton();
+                musicPlayerGUI.updateSongTitleAndArtist(currentSong);
+                musicPlayerGUI.updatePlaybackSlider(currentSong);
+            }
         }
     }
 
