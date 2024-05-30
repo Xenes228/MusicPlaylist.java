@@ -370,4 +370,8 @@ public class MusicPlayer extends PlaybackListener {
             }
         }
     }
+
+    public int getCurrentPlaylistSize(){
+        return playlist.size();
+    }
 }

@@ -37,13 +37,31 @@ class MusicPlayerTest {
 
 
         assertNotNull(musicPlayer.getCurrentSong());
-        assertEquals("C:\\Users\\chernisheva_kv\\Desktop\\MusicPlaylist.java\\MP3MusicPlayer\\src\\assets\\Tropic Fuse - French Fuse.mp3", musicPlayer.getCurrentSong().getFilePath());
+        assertEquals("src/assets/Tropic Fuse - French Fuse.mp3", musicPlayer.getCurrentSong().getFilePath());
 
 
         assertEquals(0, musicPlayerGUI.getPlaybackSliderValue());
 
         assertTrue(musicPlayerGUI.isPauseButtonEnabled());
         assertFalse(musicPlayerGUI.isPlayButtonEnabled());
+
+    }
+    @Test
+    void testDeletePlaylist() {
+        File selectedFile = new File("src/assets/playlist.txt");
+        musicPlayer.deletePlaylist(selectedFile);
+
+        assertNull(musicPlayer.getCurrentSong());
+    }
+
+    @Test
+    void testDelSong() {
+        File playlistFile = new File("src/assets/playlist.txt");
+        musicPlayer.loadPlaylist(playlistFile);
+
+        musicPlayer.delsong();
+
+        assertNotEquals(2, musicPlayer.getCurrentPlaylistSize());
 
     }
 

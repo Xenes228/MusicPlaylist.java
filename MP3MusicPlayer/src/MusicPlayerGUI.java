@@ -403,6 +403,8 @@ public class MusicPlayerGUI extends JFrame {
         JButton pauseButton = (JButton) playbackBtns.getComponent(2);
         return pauseButton.isEnabled() && pauseButton.isVisible();
     }
+
+
 }
 
 
